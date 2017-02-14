@@ -6,7 +6,7 @@ This file creates your application.
 """
 
 from app import app
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, valid_login, log_the_user_in, flash
 
 
 ###
@@ -24,7 +24,23 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+@app.route('/contact')
+def contact():
+    """Render the website's contact form"""
+    return render_template('contact.html')
 
+def send_email():
+    error = None
+    if request.method == 'POST':
+        if valid_login(request.form['username'],
+                       request.form['password']):
+            return log_the_user_in(request.form['username'])
+        flash('You were successfully logged in')
+        return redirect(url_for('index'))
+    
+        else:
+            error = 'Invalid username/password'
+    return render_template('login.html', error=error)
 ###
 # The functions below should be applicable to all Flask apps.
 ###
