@@ -34,10 +34,8 @@ def send_email():
     if request.method == 'POST':
         if valid_login(request.form['username'],
                        request.form['password']):
-            return log_the_user_in(request.form['username'])
-        flash('You were successfully logged in')
-        return redirect(url_for('index'))
-    
+            return log_the_user_in(request.form['username']) & flash('You were successfully logged in')
+        
         else:
             error = 'Invalid username/password'
     return render_template('login.html', error=error)
